@@ -1,6 +1,4 @@
 import json
-from symbol import except_clause
-
 import requests
 import time
 import os
