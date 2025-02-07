@@ -1,0 +1,7 @@
+pandas
+requests
+selenium
+flask
+flask_cors
+flask_limiter
+psutil
