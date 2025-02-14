@@ -42,7 +42,7 @@ class TrendsScrapping:
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
 
-    def run_selenium_script(self, query):
+    def run_ts_script(self, query):
         """
         Run the selenium script and return its output data
 
@@ -54,11 +54,11 @@ class TrendsScrapping:
         """
         try:
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            script_path = os.path.join(current_dir, 'ads_power_selenium.py')
+            script_path = os.path.join(current_dir, 'trends-api.ts')
 
             # Start the script as a subprocess
             process = subprocess.Popen(
-                ['python', script_path, '--query', query],
+                ['bun', script_path, query],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
@@ -111,7 +111,6 @@ class TrendsScrapping:
             with active_processes_lock:
                 active_processes -= 1
 
-
 trends_scrapper = TrendsScrapping()
 
 
@@ -123,11 +122,11 @@ def get_trends_data():
     """
     global active_processes
 
-    if not check_system_resources():
-        return jsonify({
-            'status': 'error',
-            'message': 'System resources are currently overloaded'
-        }), 503
+    # if not check_system_resources():
+    #     return jsonify({
+    #         'status': 'error',
+    #         'message': 'System resources are currently overloaded'
+    #     }), 503
 
     try:
         # Check if we can accept more processes
@@ -150,7 +149,7 @@ def get_trends_data():
             }), 400
 
         # Submit the task to the process pool
-        future = process_pool.submit(trends_scrapper.run_selenium_script, query)
+        future = process_pool.submit(trends_scrapper.run_ts_script, query)
 
         # Get the result with a timeout
         data = future.result(timeout=300)  # 5 minute timeout
