@@ -54,11 +54,11 @@ class TrendsScrapping:
         """
         try:
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            script_path = os.path.join(current_dir, 'trends-api.ts')
+            script_path = os.path.join(current_dir, 'ads_power_selenium.py')
 
             # Start the script as a subprocess
             process = subprocess.Popen(
-                ['bun', script_path, query],
+                ['python', script_path, query],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
