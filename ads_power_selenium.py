@@ -87,12 +87,10 @@ class AdsPowerSelenium:
         profile_id_to_use = random.choice(self.profile_ids)
         status_url = f"http://local.adspower.com:50325/api/v1/browser/active?user_id={profile_id_to_use}"
         open_url = "http://local.adspower.com:50325/api/v1/browser/start?clear_cache=True&clear_cookies=True&close_other_windows=True&open_tabs=[]&&user_id=" + profile_id_to_use
-        close_url = "http://local.adspower.com:50325/api/v1/browser/stop?user_id=" + profile_id_to_use
         status_resp = requests.get(status_url).json()
 
         if status_resp["code"] == 0 and status_resp["data"].get("status") == "Active":
             pass
-        info_url = f"http://local.adspower.com:50325/api/v1/browser/active-info?user_id={profile_id_to_use}"
         info_resp = requests.get(open_url).json()
         if info_resp["code"] == 0:
             chrome_driver = info_resp["data"]["webdriver"]
