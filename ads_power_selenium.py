@@ -16,7 +16,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class AdsPowerSelenium:
     def __init__(self):
-        self.profile_ids = ['ktigg8k', 'ktieu7c']
+        self.profile_ids = ['ktiec6t']
         self.open_url = None
         self.close_url = None
         self.downloaded_file_path = Path.home() / "Downloads/multiTimeline.csv"
@@ -40,7 +40,7 @@ class AdsPowerSelenium:
         retries = 0
         while True:
             if retries > 5:
-                return None
+                return "Search results not available"
             try:
                 WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located((By.XPATH, f"//div[@aria-label='A tabular representation of the data in the chart.']")))
@@ -84,9 +84,9 @@ class AdsPowerSelenium:
         return data_row
 
     def open_browser_and_load_trends_page(self, query):
-        profile_id_to_use = random.choice(self.profile_ids)
+        profile_id_to_use = "ktiec6t"
         status_url = f"http://local.adspower.com:50325/api/v1/browser/active?user_id={profile_id_to_use}"
-        open_url = "http://local.adspower.com:50325/api/v1/browser/start?clear_cache=True&clear_cookies=True&close_other_windows=True&open_tabs=[]&&user_id=" + profile_id_to_use
+        open_url = "http://local.adspower.com:50325/api/v1/browser/start?user_id=" + profile_id_to_use
         status_resp = requests.get(status_url).json()
 
         if status_resp["code"] == 0 and status_resp["data"].get("status") == "Active":
@@ -101,7 +101,7 @@ class AdsPowerSelenium:
             chrome_options.add_experimental_option("debuggerAddress", debugger_address)
 
             driver = webdriver.Chrome(service=service, options=chrome_options)
-        driver.get(f"https://trends.google.com/trends/explore?date=2024-05-09 2025-02-02&geo=PK&q={query}&hl=en")
+            driver.get(f"https://trends.google.com/trends/explore?date=2024-05-09 2025-02-02&geo=PK&q={query}&hl=en")
         # self.click_download_button(driver)
         table_rows = self.get_table_rows(driver)
         if table_rows == 'Search results not available':
