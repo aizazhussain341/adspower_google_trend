@@ -39,6 +39,8 @@ class AdsPowerSelenium:
     def get_table_rows(self, driver):
         retries = 0
         while True:
+            logger = self.setup_logging()
+            logger.info(f"In while loop: {retries}")
             if retries > 5:
                 return "Search results not available"
             try:
@@ -115,13 +117,16 @@ def main():
     query = sys.argv[1]
     logger.info(f"Starting selenium script with query: {query}")
     while True:
-        data_row = ads_power.open_browser_and_load_trends_page(query)
-        if data_row:
-            print(json.dumps(data_row))
-            sys.exit(0)
-        if data_row == "Search results not available":
-            print(json.dumps({"message": "Search results not available"}))
-            sys.exit(0)
+        try:
+            data_row = ads_power.open_browser_and_load_trends_page(query)
+            if data_row:
+                print(json.dumps(data_row))
+                sys.exit(0)
+            if data_row == "Search results not available":
+                print(json.dumps({"message": "Search results not available"}))
+                sys.exit(0)
+        except Exception as e:
+            print("Exception", e)
 
 
 if __name__ == "__main__":
