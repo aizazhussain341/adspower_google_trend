@@ -113,7 +113,7 @@ class AdsPowerSelenium:
                 return table_rows
             data_row = self.get_data_from_table_rows(table_rows, query)
             return data_row
-        return "Browser Not opened"
+        return info_resp
 
 def main():
     ads_power = AdsPowerSelenium()
@@ -126,11 +126,11 @@ def main():
             if data_row:
                 print(json.dumps(data_row))
                 sys.exit(0)
-            if data_row == "Search results not available":
+            elif data_row == "Search results not available":
                 print(json.dumps({"message": "Search results not available"}))
                 sys.exit(0)
-            if data_row == "Browser Not opened":
-                print(json.dumps({"message": "Browser Not opened issue"}))
+            else:
+                print(json.dumps(data_row))
                 sys.exit(0)
         except Exception as e:
             print("Exception", e)
