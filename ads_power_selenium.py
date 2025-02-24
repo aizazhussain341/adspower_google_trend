@@ -48,10 +48,12 @@ class AdsPowerSelenium:
                     EC.presence_of_element_located((By.XPATH, f"//div[@aria-label='A tabular representation of the data in the chart.']")))
                 try:
                     data_trs = driver.find_element(By.XPATH, f"//div[@aria-label='A tabular representation of the data in the chart.']").find_element(By.TAG_NAME, 'table').find_element(By.TAG_NAME, 'tbody').find_elements(By.TAG_NAME, 'tr')
+                    logger.info(f"Extracted Rows")
                     return data_trs
                 except:
                     try:
                         error_message = driver.find_element(By.CLASS_NAME, "widget-error-title").text
+                        logger.info(f"Error message: {error_message}")
                         if error_message == "Search results not available":
                             return "Search results not available"
                     except:
@@ -87,14 +89,15 @@ class AdsPowerSelenium:
 
     def open_browser_and_load_trends_page(self, query):
         profile_id_to_use = "ktiec6t"
+        logger = self.setup_logging()
         status_url = f"http://local.adspower.com:50325/api/v1/browser/active?user_id={profile_id_to_use}"
         open_url = "http://local.adspower.com:50325/api/v1/browser/start?user_id=" + profile_id_to_use
         status_resp = requests.get(status_url).json()
-
         if status_resp["code"] == 0 and status_resp["data"].get("status") == "Active":
             pass
         info_resp = requests.get(open_url).json()
         if info_resp["code"] == 0:
+            logger.info(f"browser opened")
             chrome_driver = info_resp["data"]["webdriver"]
             debugger_address = info_resp["data"]["ws"]["selenium"]
 
@@ -110,6 +113,7 @@ class AdsPowerSelenium:
                 return table_rows
             data_row = self.get_data_from_table_rows(table_rows, query)
             return data_row
+        return "Browser Not opened"
 
 def main():
     ads_power = AdsPowerSelenium()
@@ -124,6 +128,9 @@ def main():
                 sys.exit(0)
             if data_row == "Search results not available":
                 print(json.dumps({"message": "Search results not available"}))
+                sys.exit(0)
+            if data_row == "Browser Not opened":
+                print(json.dumps({"message": "Browser Not opened issue"}))
                 sys.exit(0)
         except Exception as e:
             print("Exception", e)
