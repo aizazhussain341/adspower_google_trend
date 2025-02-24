@@ -103,11 +103,11 @@ class AdsPowerSelenium:
             driver = webdriver.Chrome(service=service, options=chrome_options)
             driver.get(f"https://trends.google.com/trends/explore?date=2024-05-09 2025-02-02&geo=PK&q={query}&hl=en")
         # self.click_download_button(driver)
-        table_rows = self.get_table_rows(driver)
-        if table_rows == 'Search results not available':
-            return table_rows
-        data_row = self.get_data_from_table_rows(table_rows, query)
-        return data_row
+            table_rows = self.get_table_rows(driver)
+            if table_rows == 'Search results not available':
+                return table_rows
+            data_row = self.get_data_from_table_rows(table_rows, query)
+            return data_row
 
 def main():
     ads_power = AdsPowerSelenium()
