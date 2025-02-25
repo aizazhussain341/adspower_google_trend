@@ -42,18 +42,17 @@ class AdsPowerSelenium:
             logger = self.setup_logging()
             logger.info(f"In while loop: {retries}")
             if retries > 5:
+                driver.save_screenshot("1.png")
                 return "Search results not available"
             try:
                 WebDriverWait(driver, 5).until(
                     EC.presence_of_element_located((By.XPATH, f"//div[@aria-label='A tabular representation of the data in the chart.']")))
                 try:
                     data_trs = driver.find_element(By.XPATH, f"//div[@aria-label='A tabular representation of the data in the chart.']").find_element(By.TAG_NAME, 'table').find_element(By.TAG_NAME, 'tbody').find_elements(By.TAG_NAME, 'tr')
-                    logger.info(f"Extracted Rows")
                     return data_trs
                 except:
                     try:
                         error_message = driver.find_element(By.CLASS_NAME, "widget-error-title").text
-                        logger.info(f"Error message: {error_message}")
                         if error_message == "Search results not available":
                             return "Search results not available"
                     except:
@@ -106,6 +105,10 @@ class AdsPowerSelenium:
             chrome_options.add_experimental_option("debuggerAddress", debugger_address)
 
             driver = webdriver.Chrome(service=service, options=chrome_options)
+            driver.get("https://trends.google.com")
+            driver.get("https://trends.google.com/trends/explore?geo=US")
+            cookies = driver.get_cookies()
+            nid_cookie = next((cookie["value"] for cookie in cookies if cookie["name"] == "NID"), None)
             driver.get(f"https://trends.google.com/trends/explore?date=2024-05-09 2025-02-02&geo=PK&q={query}&hl=en")
         # self.click_download_button(driver)
             table_rows = self.get_table_rows(driver)
