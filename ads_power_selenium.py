@@ -45,7 +45,7 @@ class AdsPowerSelenium:
                 driver.save_screenshot("1.png")
                 return "Search results not available"
             try:
-                WebDriverWait(driver, 5).until(
+                WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located((By.XPATH, f"//div[@aria-label='A tabular representation of the data in the chart.']")))
                 try:
                     data_trs = driver.find_element(By.XPATH, f"//div[@aria-label='A tabular representation of the data in the chart.']").find_element(By.TAG_NAME, 'table').find_element(By.TAG_NAME, 'tbody').find_elements(By.TAG_NAME, 'tr')
