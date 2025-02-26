@@ -54,7 +54,7 @@ class TrendsScrapping:
         """
         try:
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            script_path = os.path.join(current_dir, 'ads_power_selenium.py')
+            script_path = os.path.join(current_dir, 'scrapeless.py')
 
             # Start the script as a subprocess
             process = subprocess.Popen(
@@ -64,7 +64,7 @@ class TrendsScrapping:
                 text=True
             )
 
-            self.logger.info(f"Started ads_power_selenium.py script with query: {query}")
+            self.logger.info(f"Started scrapeless.py script with query: {query}")
 
             # Poll process for new output until finished
             stdout = []
