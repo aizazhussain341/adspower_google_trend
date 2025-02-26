@@ -9,7 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    FLASK_APP=app.py \
+    FLASK_APP=flask_app.py \
     FLASK_ENV=production
 
 # Install system dependencies
@@ -36,5 +36,5 @@ USER appuser
 # Expose the port the app runs on
 EXPOSE 8000
 
-# Run gunicorn with recommended production settings
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120", "app:app"]
+# Run gunicorn with modified entry point to use flask_app.py
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120", "flask_app:app"]
