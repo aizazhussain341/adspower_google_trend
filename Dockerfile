@@ -2,7 +2,7 @@
 FROM python:3.11-slim
 
 # Set working directory
-WORKDIR /app
+WORKDIR /adspower_google_trend
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -30,7 +30,7 @@ COPY . .
 
 # Create a non-root user and switch to it
 RUN useradd -m appuser
-RUN chown -R appuser:appuser /app
+RUN chown -R appuser:appuser /adspower_google_trend
 USER appuser
 
 # Expose the port the app runs on
