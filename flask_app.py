@@ -42,7 +42,7 @@ class TrendsScrapping:
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
 
-    def run_ts_script(self, query):
+    def run_ts_script(self, query, start_date, end_date, country):
         """
         Run the selenium script and return its output data
 
@@ -58,7 +58,7 @@ class TrendsScrapping:
 
             # Start the script as a subprocess
             process = subprocess.Popen(
-                ['python', script_path, query],
+                ['python', script_path, query, start_date, end_date, country],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
@@ -140,16 +140,19 @@ def get_trends_data():
 
         # Get query parameter
         query = request.args.get('query')
-        if not query:
+        start_date = request.args.get('startdate')
+        end_date = request.args.get('enddate')
+        country = request.args.get('country')
+        if not (query and start_date and end_date and country):
             with active_processes_lock:
                 active_processes -= 1
             return jsonify({
                 "status": "error",
-                "message": "Query parameter is required"
+                "message": "query or start_date or end_date or country missing"
             }), 400
 
         # Submit the task to the process pool
-        future = process_pool.submit(trends_scrapper.run_ts_script, query)
+        future = process_pool.submit(trends_scrapper.run_ts_script, query, start_date, end_date, country)
 
         # Get the result with a timeout
         data = future.result(timeout=300)  # 5 minute timeout
